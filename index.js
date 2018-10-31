@@ -1,10 +1,7 @@
 const express = require('express');
 const app = express();
-const db = require('mongoose');
 
-db.connect('mongodb://testuser:testuser1@ds016108.mlab.com:16108/user-data-service')
-  .then(() => console.log('Connected to MongoDB...'))
-  .catch(() => console.log('Unable to connect to MongoDB...'));
+require('./startup/db')();
 
 app.get('/', (req, res) => {
   res.send('Hello user data service!');
