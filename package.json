@@ -11,6 +11,8 @@
   "dependencies": {
     "config": "^2.0.1",
     "express": "^4.16.4",
+    "jest": "^23.6.0",
+    "joi": "^14.0.2",
     "mongoose": "^5.3.7",
     "nodemon": "^1.18.5"
   }
