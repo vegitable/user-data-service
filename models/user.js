@@ -1,41 +1,28 @@
-const mongoose = require('mongoose');
-const Joi = require('joi');
+const db = require('../startup/db');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 50
-  },
-  email: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 255,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 8,
-    maxlength: 1024
+register = (req) => {
+  console.log(req.body)
+  var today = new Date();
+  var users = {
+    "firstname": req.body.firstname,
+    "lastname": req.body.lastname,
+    "email": req.body.email,
+    "password": req.body.password,
+    "create": today,
+    "modified": today
   }
-});
 
-const User = mongoose.model('User', userSchema);
-
-function validateUser(user) {
-  const schema = {
-    name: Joi.string().min(5).max(50).required(),
-    email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(5).max(1024).required()
-  };
-
-  return Joi.validate(user, schema);
+  db.connection.query('INSERT INTO users SET ?', users, (err, results) => {
+    if (err) {
+      console.log('The following error ocurred while attempting to register user: ', err);
+      return err;
+    } else {
+      console.log('Registering the user was successful!');
+      return results;
+    }
+  })
 }
 
 module.exports = {
-  User,
-  validateUser,
+  register
 }

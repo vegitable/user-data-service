@@ -1,8 +1,20 @@
-const db = require('mongoose');
-const config = require('config');
+const mysql = require('mysql');
 
-module.exports = function() {
-  db.connect(config.get('db'))
-    .then(() => console.log('Connected to MongoDB...'))
-    .catch(() => console.log('Unable to connect to MongoDB...'));
+var connection = mysql.createConnection({
+  host : 'localhost',
+  user: 'root',
+  password: '999apple%',
+  database: 'userauthenticationdb'
+});
+
+connection.connect((err) => {
+  if(!err) {
+    console.log('Database is connect to userauthenticationdb!');
+  } else {
+    console.log(err);
+  }
+});
+
+module.exports = {
+  connection
 }
