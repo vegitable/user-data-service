@@ -12,12 +12,12 @@ register = (req) => {
         "success": "Email already exists."
       })
     } else {
-      return addUserToDB(req);
+      return registerUserToDB(req);
     }
   });
 } 
 
-addUserToDB = (req) => {
+registerUserToDB = (req) => {
   const today = new Date();
 
   bcrypt.hash(req.body.password, 10, (err, hash) => {
