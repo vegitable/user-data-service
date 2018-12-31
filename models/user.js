@@ -2,7 +2,23 @@ const db = require('../startup/db')
 const bcrypt = require('bcrypt');
 
 register = (req) => {
-  var today = new Date();
+  const email = req.body.email;
+
+  db.connection.query('SELECT * FROM users WHERE email = ?', [email], (err, result) => {
+    if (result.length > 0) {
+      console.log('Email already exists...');
+      return ({
+        "code": 204,
+        "success": "Email already exists."
+      })
+    } else {
+      return addUserToDB(req);
+    }
+  });
+} 
+
+addUserToDB = (req) => {
+  const today = new Date();
 
   bcrypt.hash(req.body.password, 10, (err, hash) => {
     var users = {
@@ -28,9 +44,9 @@ register = (req) => {
           "success": "The user was registered successfully!"
         });
       }
-    })
+    });
   });
-} 
+}
 
 login = (req) => {
   var email = req.body.email;
