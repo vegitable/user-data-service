@@ -11,7 +11,7 @@ register = (req) => {
     "modified": today
   }
 
-  db.connection.query('INSERT INTO users SET ?', users, (err, results) => {
+  db.connection.query('INSERT INTO users SET ?', users, (err) => {
     if (err) {
       console.log('The following error ocurred while attempting to register user: ', err);
       return ({
@@ -26,8 +26,43 @@ register = (req) => {
       });
     }
   })
+} 
+
+login = (req) => {
+  var email = req.body.email;
+  var password = req.body.password
+
+  db.connection.query('SELECT * FROM users WHERE email = ?', [email], (err, result) => {
+    if (err) {
+      return ({
+        "code": 400,
+        "failed": "An error ocurred attempting login."
+      });
+    } else {
+      if (result.length > 0) {
+        if (result[0].password === password) {
+          console.log(`User ${result[0].first_name} ${result[0].last_name} has logged in at ${new Date()}.`)
+          return ({
+            "code": 200,
+            "success": "Login was sucessful!"
+          });
+        } else {
+          return ({
+            "code": 204,
+            "success": "Email and password do not match..."
+          });
+        }
+      } else {
+        return ({
+          "code": 204,
+          "success": "Email does not exist"
+        });
+      }
+    }
+  })
 }
 
 module.exports = {
-  register
+  register,
+  login
 }
