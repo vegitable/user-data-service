@@ -1,31 +1,35 @@
-const db = require('../startup/db');
+const db = require('../startup/db')
+const bcrypt = require('bcrypt');
 
 register = (req) => {
   var today = new Date();
-  var users = {
-    "first_name": req.body.firstname,
-    "last_name": req.body.lastname,
-    "email": req.body.email,
-    "password": req.body.password,
-    "created": today,
-    "modified": today
-  }
 
-  db.connection.query('INSERT INTO users SET ?', users, (err) => {
-    if (err) {
-      console.log('The following error ocurred while attempting to register user: ', err);
-      return ({
-        "code": 400,
-        "failed": "An error ocurred registering the user."
-      });
-    } else {
-      console.log('Registering the user was successful!');
-      return ({
-        "code": 200,
-        "success": "The user was registered successfully!"
-      });
+  bcrypt.hash(req.body.password, 10, (err, hash) => {
+    var users = {
+      "first_name": req.body.firstname,
+      "last_name": req.body.lastname,
+      "email": req.body.email,
+      "password": hash,
+      "created": today,
+      "modified": today
     }
-  })
+  
+    db.connection.query('INSERT INTO users SET ?', users, (err) => {
+      if (err) {
+        console.log('The following error ocurred while attempting to register user: ', err);
+        return ({
+          "code": 400,
+          "failed": "An error ocurred registering the user."
+        });
+      } else {
+        console.log('Registering the user was successful!');
+        return ({
+          "code": 200,
+          "success": "The user was registered successfully!"
+        });
+      }
+    })
+  });
 } 
 
 login = (req) => {
@@ -40,18 +44,21 @@ login = (req) => {
       });
     } else {
       if (result.length > 0) {
-        if (result[0].password === password) {
-          console.log(`User ${result[0].first_name} ${result[0].last_name} has logged in at ${new Date()}.`)
-          return ({
-            "code": 200,
-            "success": "Login was sucessful!"
-          });
-        } else {
-          return ({
-            "code": 204,
-            "success": "Email and password do not match..."
-          });
-        }
+        bcrypt.compare(password, result[0].password, function(err, res) {
+          if(res) {
+            console.log(`User ${result[0].first_name} ${result[0].last_name} has logged in at ${new Date()}.`)
+            return ({
+              "code": 200,
+              "success": "Login was successful!"
+            });
+          } else {
+            console.log('Loging was unsuccessful as passwords do not match...')
+            return ({
+              "code": 204,
+              "success": "Email and password do not match..."
+            });
+          } 
+        });
       } else {
         return ({
           "code": 204,
