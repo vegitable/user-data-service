@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 var connection = mysql.createConnection({
-  host : 'localhost',
+  host : 'mysql',
   user: 'root',
   password: '999apple%',
   database: 'userauthenticationdb'
@@ -9,7 +9,7 @@ var connection = mysql.createConnection({
 
 connection.connect((err) => {
   if(!err) {
-    console.log('Database is connect to userauthenticationdb!');
+    console.log('Database is connected to userauthenticationdb!');
   } else {
     console.log(err);
   }

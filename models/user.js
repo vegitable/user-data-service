@@ -6,7 +6,7 @@ register = (req) => {
 
   db.connection.query('SELECT * FROM users WHERE email = ?', [email], (err, result) => {
     if (result.length > 0) {
-      console.log('Email already exists...');
+      console.log('Email already exists.');
       return ({
         "code": 204,
         "success": "Email already exists."
@@ -41,7 +41,7 @@ registerUserToDB = (req) => {
         console.log('Registering the user was successful!');
         return ({
           "code": 200,
-          "success": "The user was registered successfully!"
+          "success": "Registering the user was successful!"
         });
       }
     });

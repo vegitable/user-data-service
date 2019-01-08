@@ -1,0 +1,41 @@
+version: '3.1'
+
+services:
+  mysql:  
+    image: mysql:5.7
+    container_name: mysql
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    ports: 
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: '999apple%'
+      MYSQL_DATABASE: userauthenticationdb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 999apple%
+    networks:
+      net:
+        ipv4_address: 174.29.1.1
+
+  user-data-service:
+    image: timhaydenhawkins/user-data-service
+    ports: 
+      - 3002:3002
+    restart: always
+    depends_on:
+      - mysql
+    command: ["npm", "start"]
+    networks:
+      net:
+        ipv4_address: 174.29.1.2
+
+volumes:
+  mysql-volume:
+
+networks:
+  net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 174.29.0.0/16
