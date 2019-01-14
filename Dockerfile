@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3002 3002
 
-CMD ["npm", "start"]
+CMD ["nodemon"]

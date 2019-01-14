@@ -23,6 +23,8 @@ services:
     ports: 
       - 3002:3002
     restart: always
+    environment:
+      CORSHEADER: http://localhost:3002
     depends_on:
       - mysql
     command: ["npm", "start"]
