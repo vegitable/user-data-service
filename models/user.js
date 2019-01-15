@@ -19,7 +19,15 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 register = async (req) => {
-  let user = await User.findOne({email: req.body.email});
+  const user = await User.findOne({email: req.body.email})
+    .catch((err) => {
+      console.log(err);
+      return null;
+    })
+    .then((result) => {
+      return result;
+    });
+
   if (user) {
     return {
       code: 200,
@@ -27,21 +35,65 @@ register = async (req) => {
     }
   } 
 
-  const hash = await genSalt(req.body.password);
+  const hash = await genHash(req.body.password);
   user = new User({
     name: req.body.name,
     email: req.body.email,
     password: hash,
   });
-  
-  const result = await user.save();
-  return {
-    code: 200,
-    message: 'User ' + result.name + ' was created successfully'
-  }
+
+  return await user.save()
+    .catch((err) => {
+      console.log(err);
+      return {
+        code: 200,
+        message: err
+      }
+    })
+    .then((result) => {
+      return {
+        code: 200,
+        message: 'User ' + result.name + ' was created successfully'
+      }
+    });
 }
 
-genSalt = (password) => {
+
+login = async (req) => {
+  const user = await User.findOne({ email: req.body.email})
+    .catch((err) => {
+      console.log(err);
+      return {
+        code: 200,
+        message: 'Account does not exist.'
+      }
+    })
+    .then((result) => {
+      return result;
+    });
+  
+  return await checkAuth(req.body.password, user.password)
+    .catch((err) => {
+      console.log(err)
+      return {
+        code: 200,
+        message: 'User could not be authorised.'
+      }
+    })
+    .then((result) => {
+      console.log(result);
+      return {
+        code: 200,
+        message: 'User logged in successfully.'
+      }
+    });
+}
+
+logout = () => {
+
+}
+
+genHash = (password) => {
   return new Promise((resolve,reject) => {
     bcrypt.hash(password, 10 , (err,hash) => {
       if (err) {
@@ -54,7 +106,17 @@ genSalt = (password) => {
   });
 }
 
-login = (req) => {
+checkAuth = (password, hash) => {
+  return new Promise((reject, resolve) => {
+    bcrypt.compare(password, hash, (err, res) => {
+      if (err) {
+        reject(false)
+      } else {
+        resolve(true)
+      }
+    });
+  })
+
 }
 
 module.exports = {
