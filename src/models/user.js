@@ -30,7 +30,7 @@ register = async (req) => {
 
   if (user) {
     return {
-      code: 200,
+      status: 200,
       message: 'User already exists.'
     }
   } 
@@ -46,14 +46,14 @@ register = async (req) => {
     .catch((err) => {
       console.log(err);
       return {
-        code: 200,
+        status: 200,
         message: err
       }
     })
     .then((result) => {
       console.log(result);
       return {
-        code: 200,
+        status: 200,
         message: 'User ' + result.name + ' was created successfully'
       }
     });
@@ -65,7 +65,7 @@ login = async (req) => {
     .catch((err) => {
       console.log(err);
       return {
-        code: 200,
+        status: 200,
         message: 'Account does not exist.'
       }
     })
@@ -77,14 +77,14 @@ login = async (req) => {
     .catch((err) => {
       console.log(err)
       return {
-        code: 200,
+        status: 200,
         message: 'User could not be authorised.'
       }
     })
     .then((result) => {
       console.log(result);
       return {
-        code: 200,
+        status: 200,
         message: 'User logged in successfully.',
         name: user.name,
         email: user.email,
@@ -121,6 +121,7 @@ checkAuth = (password, hash) => {
 }
 
 module.exports = {
+  User,
   register,
   login
 }
