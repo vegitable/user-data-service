@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 register = async (req) => {
-  const user = await User.findOne({email: req.body.email})
+  let user = await User.findOne({email: req.body.email})
     .catch((err) => {
       console.log(err);
       return null;
@@ -35,7 +35,7 @@ register = async (req) => {
     }
   } 
 
-  const hash = await genHash(req.body.password);
+  let hash = await genHash(req.body.password);
   user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -51,6 +51,7 @@ register = async (req) => {
       }
     })
     .then((result) => {
+      console.log(result);
       return {
         code: 200,
         message: 'User ' + result.name + ' was created successfully'
