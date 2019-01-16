@@ -4,20 +4,14 @@ const user = require('./routes/users');
 const corsMiddleware = require('./middleware/cors');
 const session = require('express-session');
 const uuid = require('uuid');
-const db = require('./startup/db');
 const port = 3002 || event.process.PORT;
 
-db();
+require('./startup/db')();
 
 app.use(corsMiddleware);
 app.use(express.json());
 app.use(session({
-  genid: (req) => {
-    console.log('Inside the session middleware')
-    console.log(req.sessionID)
-    return uuid() // use UUIDs for session IDs
-  },
-  secret: 'keyboard cat',
+  secret: 'thisisthevegitablesecret',
   resave: false,
   saveUninitialized: true
 }));

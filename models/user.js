@@ -84,7 +84,9 @@ login = async (req) => {
       console.log(result);
       return {
         code: 200,
-        message: 'User logged in successfully.'
+        message: 'User logged in successfully.',
+        name: user.name,
+        email: user.email,
       }
     });
 }
