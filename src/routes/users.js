@@ -23,7 +23,7 @@ router.post('/login', async (req, res) => {
     req.session.user = result.name;
     req.session.email = result.email;
   }
-  console.log(req.session);
+  console.log(result);
   res.send(result);
 });
 

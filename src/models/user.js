@@ -90,11 +90,7 @@ login = async (req) => {
         email: user.email,
       }
     });
-}
-
-logout = () => {
-
-}
+  }
 
 genHash = (password) => {
   return new Promise((resolve,reject) => {
@@ -110,12 +106,14 @@ genHash = (password) => {
 }
 
 checkAuth = (password, hash) => {
-  return new Promise((reject, resolve) => {
+  return new Promise((resolve, reject) => {
     bcrypt.compare(password, hash, (err, res) => {
       if (err) {
-        reject(false)
+        console.log(err);
+        reject(false);
       } else {
-        resolve(true)
+        console.log(res);
+        resolve(true);
       }
     });
   })
