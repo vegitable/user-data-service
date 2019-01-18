@@ -63,33 +63,37 @@ register = async (req) => {
 login = async (req) => {
   const user = await User.findOne({ email: req.body.email})
     .catch((err) => {
-      console.log(err);
-      return {
-        status: 200,
-        message: 'Account does not exist.'
-      }
+      console.log('Error finding user account: ' + err);
+      return null;
     })
     .then((result) => {
       return result;
     });
-  
-  return await checkAuth(req.body.password, user.password)
-    .catch((err) => {
-      console.log(err)
+    
+    if (!user) {
       return {
-        status: 200,
-        message: 'User could not be authorised.'
+        status: 401,
+        message: 'Account does not exist.'
       }
-    })
-    .then((result) => {
-      console.log(result);
-      return {
-        status: 200,
-        message: 'User logged in successfully.',
-        name: user.name,
-        email: user.email,
-      }
-    });
+    } else {
+      return await checkAuth(req.body.password, user.password)
+      .catch((err) => {
+        console.log('Error authorising user: ' + err);
+        return {
+          status: 401,
+          message: 'User could not be authorised.'
+        }
+      })
+      .then((result) => {
+        console.log(result);
+        return {
+          status: 200,
+          message: 'User logged in successfully.',
+          name: user.name,
+          email: user.email,
+        }
+      });
+    }
   }
 
 genHash = (password) => {

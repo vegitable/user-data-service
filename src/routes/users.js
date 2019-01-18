@@ -14,12 +14,12 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   if (!req.body.email || !req.body.password) {
     res.send({
-      code: 200,
+      code: 401,
       message: 'Missing details'
     });
   }
   const result = await login(req);
-  if (result.message === 'User logged in successfully.') {
+  if (result.status === 200) {
     req.session.user = result.name;
     req.session.email = result.email;
   }
