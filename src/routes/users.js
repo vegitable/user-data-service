@@ -12,8 +12,12 @@ router.post('/register', async (req, res) => {
     res.status(401).send({
       message: 'Failed to create account.'
     })
+  } else {
+    req.session.user = req.body.name;
+    req.session.email = req.body.email;
+    res.status(200).send(result);
+
   }
-  res.status(200).send(result);
 });
 
 router.post('/login', async (req, res) => {
@@ -38,7 +42,6 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.session.destroy();
-  console.log(req.session);
   res.status(200).send({
     message: 'User logged out successfully'
   });
