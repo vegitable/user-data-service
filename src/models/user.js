@@ -44,9 +44,7 @@ register = async (req) => {
     })
     .then((result) => {
       console.log(result);
-      return {
-        message: 'User ' + result.name + ' was created successfully'
-      }
+      return result;
     });
 }
 
