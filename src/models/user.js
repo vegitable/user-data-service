@@ -28,12 +28,7 @@ register = async (req) => {
       return result;
     });
 
-  if (user) {
-    return {
-      status: 200,
-      message: 'User already exists.'
-    }
-  } 
+  if (user) { return null } 
 
   let hash = await genHash(req.body.password);
   user = new User({
@@ -45,15 +40,11 @@ register = async (req) => {
   return await user.save()
     .catch((err) => {
       console.log(err);
-      return {
-        status: 200,
-        message: err
-      }
+      return null;
     })
     .then((result) => {
       console.log(result);
       return {
-        status: 200,
         message: 'User ' + result.name + ' was created successfully'
       }
     });
@@ -71,23 +62,16 @@ login = async (req) => {
     });
     
     if (!user) {
-      return {
-        status: 401,
-        message: 'Account does not exist.'
-      }
+      return null;
     } else {
       return await checkAuth(req.body.password, user.password)
       .catch((err) => {
         console.log('Error authorising user: ' + err);
-        return {
-          status: 401,
-          message: 'User could not be authorised.'
-        }
+        return null;
       })
       .then((result) => {
         console.log(result);
         return {
-          status: 200,
           message: 'User logged in successfully.',
           name: user.name,
           email: user.email,

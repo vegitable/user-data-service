@@ -8,30 +8,38 @@ router.get('/', (req, res) => {
 
 router.post('/register', async (req, res) => {
   const result = await register(req);
-  res.send(result);
+  if (!result) {
+    res.status(401).send({
+      message: 'Failed to create account.'
+    })
+  }
+  res.status(200).send(result);
 });
 
 router.post('/login', async (req, res) => {
   if (!req.body.email || !req.body.password) {
-    res.send({
-      code: 401,
-      message: 'Missing details'
+    res.status(401).send({
+      message: 'Missing authentication details.'
     });
   }
   const result = await login(req);
-  if (result.status === 200) {
+  if (!result) {
+    res.status(401).send({
+      message: 'User could not be authorised.'
+    })
+  } else {
     req.session.user = result.name;
     req.session.email = result.email;
+    
+    console.log(result);
+    res.status(200).send(result);
   }
-  console.log(result);
-  res.send(result);
 });
 
 router.get('/logout', (req, res) => {
   req.session.destroy();
   console.log(req.session);
-  res.send({
-    code: 200,
+  res.status(200).send({
     message: 'User logged out successfully'
   });
 });
