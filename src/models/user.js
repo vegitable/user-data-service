@@ -51,32 +51,40 @@ register = async (req) => {
 
 login = async (req) => {
   const user = await User.findOne({ email: req.body.email})
+  .catch((err) => {
+    console.log('Error finding user account: ' + err);
+    return null;
+  })
+  .then((result) => {
+    return result;
+  });
+  
+  if (!user) {
+    return null;
+  } else {
+    return await checkAuth(req.body.password, user.password)
     .catch((err) => {
-      console.log('Error finding user account: ' + err);
+      console.log('Error authorising user: ' + err);
       return null;
     })
     .then((result) => {
+      console.log(result);
       return result;
     });
-    
-    if (!user) {
-      return null;
-    } else {
-      return await checkAuth(req.body.password, user.password)
-      .catch((err) => {
-        console.log('Error authorising user: ' + err);
-        return null;
-      })
-      .then((result) => {
-        console.log(result);
-        return {
-          message: 'User logged in successfully.',
-          name: user.name,
-          email: user.email,
-        }
-      });
-    }
   }
+}
+
+auth = async (id) => {
+  return await User.findById(id)
+    .catch((err) => {
+      console.log('Error authenticating user: ' + err);
+      return null;
+    })
+    .then((result) => {
+      console.log(result);
+      return result;
+    });
+}
 
 genHash = (password) => {
   return new Promise((resolve,reject) => {
@@ -109,5 +117,6 @@ checkAuth = (password, hash) => {
 module.exports = {
   User,
   register,
-  login
+  login,
+  auth
 }

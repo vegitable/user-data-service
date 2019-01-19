@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { register, login } = require('../models/user');
+const { register, login, auth } = require('../models/user');
 
 router.get('/', (req, res) => {
   res.send('vegitable session started!')
@@ -18,14 +18,15 @@ router.post('/register', async (req, res) => {
       expiresIn: 3600
     })
 
-    res.status(200).send(
-      {
+    result.password = 0;
+
+    res.status(200).send({
         auth: true,
         token: token,
-        message: 'User ' + result.name + ' was created successfully'
+        message: 'User was created successfully',
+        user: result
       }
     );
-
   }
 });
 
@@ -41,22 +42,26 @@ router.post('/login', async (req, res) => {
       message: 'User could not be authorised.'
     })
   } else {
-    req.session.user = result.name;
-    req.session.email = result.email;
-    
-    console.log(result);
-    res.status(200).send(result);
+    let token = jwt.sign({id: result._id}, 'supertestsecret', {
+      expiresIn: 3600
+    })
+
+    result.password = 0;
+
+    res.status(200).send({
+        auth: true,
+        token: token,
+        message: 'User logged in successfully',
+      }
+    );
   }
 });
 
 router.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.status(200).send({
-    message: 'User logged out successfully'
-  });
+  res.status(200).send({ auth: false, token: null });
 });
 
-router.get('/auth', (req, res) => {
+router.get('/auth', async (req, res) => {
   let token = req.headers['x-access-token'];
   if (!token) {
     res.status(401).send({
@@ -65,14 +70,21 @@ router.get('/auth', (req, res) => {
     });
   }
 
-  jwt.verify(token, 'supertestsecret', (err, decoded) => {
+  let result = await jwt.verify(token, 'supertestsecret', (err, decoded) => {
     if (err) {
-      return res.status(500).send({ 
-        auth: false, 
-        message: 'Failed to authenticate token.' 
-      });
+      return null;
+    };
+    if (!decoded.id) { return null }
+    else {
+      return decoded;
     }
-    res.status(200).send(decoded);
+  });
+
+  let user = await auth(result.id);
+  user.password = 0;
+  res.status(200).send({
+    auth: true,
+    user: user,
   });
 });
 
