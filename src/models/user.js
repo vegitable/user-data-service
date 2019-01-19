@@ -68,8 +68,7 @@ login = async (req) => {
       return null;
     })
     .then((result) => {
-      console.log(result);
-      return result;
+      return user;
     });
   }
 }
@@ -106,7 +105,7 @@ checkAuth = (password, hash) => {
         console.log(err);
         reject(false);
       } else {
-        console.log(res);
+        console.log('Bcrypt authenticate validated.');
         resolve(true);
       }
     });
