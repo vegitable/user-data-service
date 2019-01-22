@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { saveRestaurant } = require('../models/profile');
+const { saveRestaurant, getRestaurants } = require('../models/profile');
 
 router.post('/saveRestaurant', async (req, res) => {
   let result = await saveRestaurant(req);
@@ -15,8 +15,17 @@ router.post('/saveRestaurant', async (req, res) => {
   }
 });
 
-router.get('/getRestaurants', (req, res) => {
-  res.send('end point working');
+router.get('/getRestaurants', async (req, res) => {
+  let result = await getRestaurants(req);
+  if (!result) {
+    res.status(401).send({
+      message: 'Unable to find restaurants.'
+    });
+  } else {
+    res.status(200).send({
+      restaurants: result
+    });
+  }
 })
 
 module.exports = router;

@@ -43,6 +43,25 @@ saveRestaurant = async (req) => {
     })
 }
 
+getRestaurants = async (req) => {
+  let profile = await Profile.findOne({userEmail: req.body.userEmail})
+    .catch((err) => {
+      console.log(err);
+      return null;
+    })
+    .then((result) => {
+      console.log(result);
+      return result;
+    });
+  
+  if (!profile) {
+    return null;
+  } else {
+    return profile.restaurants;
+  } 
+}
+
 module.exports = {
-  saveRestaurant
+  saveRestaurant,
+  getRestaurants
 }
