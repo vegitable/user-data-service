@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { saveRestaurant, getRestaurants } = require('../models/profile');
+const { saveRestaurant, getRestaurants, removeRestaurant } = require('../models/profile');
 
 router.post('/saveRestaurant', async (req, res) => {
   let result = await saveRestaurant(req);
@@ -16,7 +16,6 @@ router.post('/saveRestaurant', async (req, res) => {
 });
 
 router.post('/getRestaurants', async (req, res) => {
-  console.log('get api endpoint hit');
   let result = await getRestaurants(req);
   console.log('result: ' + result);
   if (!result) {
@@ -30,8 +29,18 @@ router.post('/getRestaurants', async (req, res) => {
   }
 });
 
-router.post('/removeRestaurant', (req, res) => {
-  res.send('remove endpoint working');
+router.post('/removeRestaurant', async (req, res) => {
+  let result = await removeRestaurant(req);
+  if (result) {
+    res.status(200).send({
+      message: 'Restaurant has been removed from favourites.',
+      result: result
+    });
+  } else {
+    res.status(401).send({
+      message: 'Failed to remove restaurant.'
+    })
+  }
 });
 
 module.exports = router;

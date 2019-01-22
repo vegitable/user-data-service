@@ -56,7 +56,39 @@ getRestaurants = async (req) => {
   } 
 }
 
+removeRestaurant = async (req) => {
+  let profile = await Profile.findOne({userEmail: req.body.userEmail})
+  .catch((err) => {
+    console.log(err);
+    return null;
+  })
+  .then((result) => {
+    console.log(`Result -> ${result}`);
+    return result;
+  });
+
+  let index = searchRestaurants(profile.restaurants, req.body.restaurant);
+  if (index) {
+    profile.restaurants.splice(index, 1);
+    let result = await profile.save();
+    return result;
+  } else {
+    return null;
+  }
+} 
+
+searchRestaurants = (restaurantsArray, restaurant) => {
+  for (let i = 0; i < restaurantsArray.length; i++) {
+    let testRestaurant = restaurantsArray[i];
+    if (testRestaurant.name === restaurant.name && 
+      testRestaurant.postcode === restaurant.postcode) {
+      return i;
+    }
+  }
+}
+
 module.exports = {
   saveRestaurant,
-  getRestaurants
+  getRestaurants,
+  removeRestaurant
 }
