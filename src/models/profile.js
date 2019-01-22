@@ -14,7 +14,6 @@ const profileShema = new mongoose.Schema({
 const Profile = mongoose.model('Profile', profileShema);
 
 saveRestaurant = async (req) => {
-  console.log(req.body.userEmail);
   let profile = await Profile.findOne({userEmail: req.body.userEmail})
     .catch((err) => {
       console.log(err);
