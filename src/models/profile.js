@@ -30,6 +30,8 @@ saveRestaurant = async (req) => {
       userEmail: req.body.userEmail,
       restaurants: req.body.restaurants,
     })
+  } else {
+    profile.restaurants = req.body.restaurants
   }
   
   return await profile.save()
