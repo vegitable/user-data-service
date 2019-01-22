@@ -5,42 +5,37 @@ const profileShema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  restaurants: {
-    type: Array,
-    required: false,
-  }
+  restaurants: [{name: String, postcode: String}]
 });
 
 const Profile = mongoose.model('Profile', profileShema);
 
 saveRestaurant = async (req) => {
+  console.log(req.body);
+
   let profile = await Profile.findOne({userEmail: req.body.userEmail})
     .catch((err) => {
       console.log(err);
       return null;
     })
     .then((result) => {
-      console.log(`Result: ${result}`);
+      console.log(result);
       return result;
     });
 
   if (!profile) {
-    profile = new Profile({
+    let profile = new Profile({
       userEmail: req.body.userEmail,
-      restaurants: req.body.restaurants,
-    })
-  } else {
-    profile.restaurants = req.body.restaurants
+      restaurants: []
+    });
+    await profile.save();
   }
-  
-  return await profile.save()
-    .catch((err) => {
-      console.log(err);
-      return null;
-    }).then((result) => {
-      console.log(result);
-      return result;
-    })
+
+  let restaurant = {name: req.body.restaurant.name, postcode: req.body.restaurant.postcode};
+  let result = await Profile.findOneAndUpdate({userEmail: req.body.userEmail}, {$push: {restaurants: restaurant}});
+  console.log(`Result -> ${result}`)
+  return result;
+
 }
 
 getRestaurants = async (req) => {

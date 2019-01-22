@@ -15,8 +15,10 @@ router.post('/saveRestaurant', async (req, res) => {
   }
 });
 
-router.get('/getRestaurants', async (req, res) => {
+router.post('/getRestaurants', async (req, res) => {
+  console.log('get api endpoint hit');
   let result = await getRestaurants(req);
+  console.log('result: ' + result);
   if (!result) {
     res.status(401).send({
       message: 'Unable to find restaurants.'
