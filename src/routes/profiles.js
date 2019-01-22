@@ -28,6 +28,10 @@ router.post('/getRestaurants', async (req, res) => {
       restaurants: result
     });
   }
-})
+});
+
+router.post('/removeRestaurant', (req, res) => {
+  res.send('remove endpoint working');
+});
 
 module.exports = router;
