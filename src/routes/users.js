@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
     })
   } else {
     let token = jwt.sign({id: result._id}, 'supertestsecret', {
-      expiresIn: 3600
+      expiresIn: 30
     })
     
     result.password = 0;
