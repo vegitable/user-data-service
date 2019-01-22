@@ -15,4 +15,8 @@ router.post('/saveRestaurant', async (req, res) => {
   }
 });
 
+router.get('/getRestaurants', (req, res) => {
+  res.send('end point working');
+})
+
 module.exports = router;
