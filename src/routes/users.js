@@ -81,12 +81,16 @@ router.get('/auth', async (req, res) => {
     }
   });
 
-  let user = await auth(result.id);
-  user.password = 0;
-  res.status(200).send({
-    auth: true,
-    user: user,
-  });
+  if (result) {
+    let user = await auth(result.id);
+    user.password = 0;
+    res.status(200).send({
+      auth: true,
+      user: user,
+    });
+  } else {
+    return null;
+  }
 });
 
 module.exports = router;

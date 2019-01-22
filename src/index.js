@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const helmet = require('helmet');
-const user = require('./routes/users');
+const users = require('./routes/users');
+const profiles = require('./routes/profiles');
 const corsMiddleware = require('./middleware/cors');
 const port = 3002 || event.process.PORT;
 
@@ -17,7 +18,8 @@ app.use(session({
 }));
 app.use(express.json());
 
-app.use('/api/users', user);
+app.use('/api/users', users);
+app.use('/api/profiles', profiles);
 
 app.get('/', (req, res) => {
   res.send('vegitable user-data-service is running!');
