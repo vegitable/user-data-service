@@ -24,7 +24,7 @@ saveRestaurant = async (req) => {
     });
 
   if (!profile) {
-    let profile = new Profile({
+    profile = new Profile({
       userEmail: req.body.userEmail,
       restaurants: []
     });
@@ -32,9 +32,15 @@ saveRestaurant = async (req) => {
   }
 
   let restaurant = {name: req.body.restaurant.name, postcode: req.body.restaurant.postcode};
-  let result = await Profile.findOneAndUpdate({userEmail: req.body.userEmail}, {$push: {restaurants: restaurant}});
-  console.log(`Result -> ${result}`)
-  return result;
+  let restaurantExists = searchRestaurants(profile.restaurants, restaurant);
+  console.log(restaurantExists);
+  if (restaurantExists === -1) {
+    let result = await Profile.findOneAndUpdate({userEmail: req.body.userEmail}, {$push: {restaurants: restaurant}});
+    console.log(`Result -> ${result}`)
+    return result;
+  } else {
+    return null;
+  }
 
 }
 
@@ -68,7 +74,7 @@ removeRestaurant = async (req) => {
   });
 
   let index = searchRestaurants(profile.restaurants, req.body.restaurant);
-  if (index) {
+  if (index > -1) {
     profile.restaurants.splice(index, 1);
     let result = await profile.save();
     return result;
@@ -85,6 +91,7 @@ searchRestaurants = (restaurantsArray, restaurant) => {
       return i;
     }
   }
+  return -1;
 }
 
 module.exports = {
