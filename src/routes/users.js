@@ -89,7 +89,10 @@ router.get('/auth', async (req, res) => {
       user: user,
     });
   } else {
-    return null;
+    res.status(401).send({
+      auth: false,
+      message: 'User authentication failed.'
+    });
   }
 });
 
