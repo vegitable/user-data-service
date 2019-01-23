@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const users = require('./routes/users');
 const profiles = require('./routes/profiles');
 const corsMiddleware = require('./middleware/cors');
-const port = 3002 || process.env.PORT;
+const port = process.env.PORT || 3002;
 
 require('./startup/db')();
 
