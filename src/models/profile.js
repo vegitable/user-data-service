@@ -39,7 +39,7 @@ saveRestaurant = async (req) => {
     console.log(`Result -> ${result}`)
     return result;
   } else {
-    return null;
+    return 'restaurant exists';
   }
 
 }

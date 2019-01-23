@@ -4,9 +4,9 @@ const { saveRestaurant, getRestaurants, removeRestaurant } = require('../models/
 
 router.post('/saveRestaurant', async (req, res) => {
   let result = await saveRestaurant(req);
-  if (!result) {
-    res.status(401).send({
-      message: 'Unable to add restaurant to profile.'
+  if (result === 'restaurant exists') {
+    res.status(409).send({
+      message: 'Restaurant already saved to users profile.'
     });
   } else {
     res.status(200).send({
