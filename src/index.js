@@ -1,10 +1,11 @@
 const express = require('express');
-const app = express();
 const session = require('express-session');
 const helmet = require('helmet');
 const users = require('./routes/users');
 const profiles = require('./routes/profiles');
 const corsMiddleware = require('./middleware/cors');
+
+const app = express();
 const port = process.env.PORT || 3002;
 
 require('./startup/db')();
@@ -14,7 +15,7 @@ app.use(corsMiddleware);
 app.use(session({
   secret: 'thisisthevegitablesecret',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
 }));
 app.use(express.json());
 
