@@ -5,7 +5,7 @@ const router = express.Router();
 const { register, login, auth } = require('../models/user');
 
 router.get('/', (req, res) => {
-  res.send('vegitable session started!');
+  res.status(200).send({ message: 'vegitable session started!' });
 });
 
 router.post('/register', async (req, res) => {
