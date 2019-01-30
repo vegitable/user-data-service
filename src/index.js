@@ -26,8 +26,8 @@ app.get('/', (req, res) => {
   res.send('vegitable user-data-service is running!');
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
 
-module.exports = app;
+module.exports = server;

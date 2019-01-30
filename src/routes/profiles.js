@@ -16,7 +16,7 @@ router.post('/saveRestaurant', async (req, res) => {
   }
 });
 
-router.get('/getRestaurants', async (req, res) => {
+router.post('/getRestaurants', async (req, res) => {
   const result = await getRestaurants(req);
   console.log(`result: ${result}`);
   if (!result) {
