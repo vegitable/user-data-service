@@ -23,7 +23,7 @@ app.use('/api/users', users);
 app.use('/api/profiles', profiles);
 
 app.get('/', (req, res) => {
-  res.send('vegitable user-data-service is running!');
+  res.send('vegitable user-data-service is running in staging!');
 });
 
 const server = app.listen(port, () => {
