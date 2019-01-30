@@ -97,4 +97,5 @@ module.exports = {
   saveRestaurant,
   getRestaurants,
   removeRestaurant,
+  Profile,
 };
